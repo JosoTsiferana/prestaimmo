@@ -1,0 +1,59 @@
+.spacer {
+    float: none;
+    clear: both;
+    display: block;
+
+}
+.info_manualinvoice {
+    width: 100%;
+    margin: auto auto 20px;
+    text-align: center;
+}
+
+.information_content span {
+    display: block;
+    padding: 2px 0px;
+    font-size: 14px;
+    font-weight: 500;
+}
+.info_manualinvoice span {
+    font-size: 15px;
+    line-height: 1;
+    font-weight: 600;
+    text-align: center;
+}
+
+.manualinvoicemanagement_content_table tbody tr a {
+    margin: auto 10px auto auto;
+}
+
+#home-list-button {
+    min-height: 55.6px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    font-weight: normal;
+    line-height: 1;
+}
+
+.help-block {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    color: #959595;
+}
+
+.help-block {
+    font-style: italic;
+}
+
+.form_info_client {
+    margin-top: 1.5rem;
+    display: block;
+    position: relative;
+}
+
+.information_client {
+    margin-bottom: 10px;
+}
