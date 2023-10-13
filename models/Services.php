@@ -18,6 +18,7 @@ class Services extends ObjectModel
     public $id_service;
     public $title;
     public $price;
+    public $changeable;
     public $date_add;
 
     /*
@@ -30,6 +31,7 @@ class Services extends ObjectModel
         'fields' => array(
             'title' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
             'price' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+            'changeable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
     );
@@ -90,12 +92,13 @@ class Services extends ObjectModel
      *
      * @return Services Object
      */
-    public static function createServices($title, $price) {
+    public static function createServices($title, $price ,$changeable) {
 
         $now = new DateTime();
         $service = new Services();
         $service->title = $title;
         $service->price = $price;
+        $service->changeable = $changeable;
         $service->date_add = $now->format('Y-m-d H:i:s');
         $service->save();
         return $service->id_service;
@@ -112,11 +115,12 @@ class Services extends ObjectModel
      *
      * @return Services Object
      */
-    public static function updateServices($id_service,$title, $price ) {
+    public static function updateServices($id_service,$title, $price,$changeable ) {
 
         $service = new Services($id_service);
         $service->title = $title;
         $service->price = $price;
+        $service->changeable = $changeable;
         $service->update();
         return $service;
     }

@@ -83,12 +83,32 @@ class AdminPrestaImmoServiceController extends ModuleAdminController
                 'width' => 'auto',
                 'search' => true,
                 'filter_key' => 'a!price'
+            ),
+
+            'changeable' => array(
+                'title' => $this->l('Changeable'),
+                'width' => 'auto',
+                'search' => true,
+                'filter_key' => 'a!changeable'
             )
         );
 
         return parent::renderList();
     }
 
+
+    public function displayStatus($id_slide, $active)
+    {
+        $title = ((int) $active == 0 ? $this->trans('Disabled', [], 'Admin.Global') : $this->trans('Enabled', [], 'Admin.Global'));
+        $icon = ((int) $active == 0 ? 'icon-remove' : 'icon-check');
+        $class = ((int) $active == 0 ? 'btn-danger' : 'btn-success');
+        $html = '<a class="btn ' . $class . '" href="' . AdminController::$currentIndex .
+            '&configure=' . $this->name .
+            '&token=' . Tools::getAdminTokenLite('AdminModules') .
+            '&changeStatus&id_slide=' . (int) $id_slide . '" title="' . $title . '"><i class="' . $icon . '"></i> ' . $title . '</a>';
+
+        return $html;
+    }
 
 
     public function initPageHeaderToolbar()
@@ -102,7 +122,7 @@ class AdminPrestaImmoServiceController extends ModuleAdminController
         if (!($obj = $this->loadObject(true)))
             return;
 
-        $title = $this->l('Add', [], 'Modules.PrestaImmo.Admin');
+        $title = $this->l('Add');
         $values = array(
             'title' => '',
             'price' => ''
@@ -126,15 +146,33 @@ class AdminPrestaImmoServiceController extends ModuleAdminController
                 'input' => array(
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Title', [], 'Modules.PrestaImmo.Admin'),
+                        'label' => $this->l('Title'),
                         'name' => 'title',
                         'required' => true,
                     ),
                     array(
                         'type' => 'text',
-                        'label' => $this->l('Price', [], 'Modules.PrestaImmo.Admin'),
+                        'label' => $this->l('Price'),
                         'name' => 'price',
                         'required' => true,
+                    ),
+                    array(
+                        'type' => 'switch',
+                        'label' => $this->l('Changeable'),
+                        'name' => 'changeable',
+                        'is_bool' => true,
+                        'values' => [
+                            [
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->trans('Yes', [], 'Admin.Global'),
+                            ],
+                            [
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->trans('No', [], 'Admin.Global'),
+                            ],
+                        ],
                     )
                 ),
                 'submit' => array(
@@ -154,21 +192,39 @@ class AdminPrestaImmoServiceController extends ModuleAdminController
                     'input' => array(
                         array(
                             'type' => 'hidden',
-                            'label' => $this->l('Id', [], 'Modules.PrestaImmo.Admin'),
+                            'label' => $this->l('Id'),
                             'name' => 'id_service',
                             'required' => true,
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('title', [], 'Modules.PrestaImmo.Admin'),
+                            'label' => $this->l('title'),
                             'name' => 'title',
                             'required' => true,
                         ),
                         array(
                             'type' => 'text',
-                            'label' => $this->l('price', [], 'Modules.PrestaImmo.Admin'),
+                            'label' => $this->l('price'),
                             'name' => 'price',
                             'required' => true,
+                        ),
+                        array(
+                            'type' => 'switch',
+                            'label' => $this->l('Changeable'),
+                            'name' => 'changeable',
+                            'is_bool' => true,
+                            'values' => [
+                                [
+                                    'id' => 'active_on',
+                                    'value' => 1,
+                                    'label' => $this->trans('Yes', [], 'Admin.Global'),
+                                ],
+                                [
+                                    'id' => 'active_off',
+                                    'value' => 0,
+                                    'label' => $this->trans('No', [], 'Admin.Global'),
+                                ],
+                            ],
                         )
                     ),
                     'submit' => array(
@@ -228,6 +284,7 @@ class AdminPrestaImmoServiceController extends ModuleAdminController
                 $service = new Services();
                 $service->title = Tools::getValue('title');
                 $service->price = Tools::getValue('price');
+                $service->changeable = Tools::getValue('changeable');
                 $service->save();
             }
             else return self::postValidation();
@@ -237,7 +294,8 @@ class AdminPrestaImmoServiceController extends ModuleAdminController
             if (empty(self::postValidation())){
                 $service = new Services((int)Tools::getValue('id_service'));
                 $service->title = Tools::getValue('title');
-                $service->price = Tools::getValue('price');
+                $service->price = Tools::getValue('price');                
+                $service->changeable = Tools::getValue('changeable');
                 $service->update();
             }
             else return self::postValidation();

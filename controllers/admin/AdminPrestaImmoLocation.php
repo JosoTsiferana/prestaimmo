@@ -74,6 +74,22 @@ class AdminPrestaImmoLocationController extends ModuleAdminController
                 'search' => true
             ),
         ); */
+
+        //parent::initContent();
+
+        // Retrieve and process the data sent via Ajax (e.g., $data = Tools::getValue('yourData'))
+
+        // Perform your custom logic
+
+        // Send a JSON response back
+
+        header('Content-Type: application/json');
+        $id_product = Tools::getValue('id_product');
+        $equipement = Tools::getValue('equipement');
+        $service = Tools::getValue('service');
+        $week = Tools::getValue('week');
+        $loaction = new Locations();
+        $loaction->createLocations(1,$equipement,$service,$week);
     }
 
     public function setMedia($isNewTheme = false)
@@ -357,5 +373,47 @@ class AdminPrestaImmoLocationController extends ModuleAdminController
         return $tpl->fetch();
         /*$test = "test";
         return $test;*/
+    }
+    
+    public function ajaxProcessAddLocation()
+    {
+        header('Content-Type: application/json');
+        $id_product = Tools::getValue('id_product');
+        $equipement = Tools::getValue('equipement');
+        $service = Tools::getValue('service');
+        $week = Tools::getValue('week');
+        $loaction = new Locations();
+        $loaction->createLocations(1,$equipement,$service,$week);
+        var_dump('test');
+        exit();
+		return 'foo';
+    }
+
+        /**
+     * Override de ControllerCore::ajaxDie()
+     * Cette méthode n'existe pas pour des boutiques < 1.6.0.13
+     * @param type $value
+     * @param string $controller
+     * @param string $method
+     */
+    protected function ajaxDie($value = null, $controller = null, $method = null)
+    {
+        if (version_compare(_PS_VERSION_, '1.6.0.13', '>=') === true) {
+            parent::ajaxDie($value, $controller, $method);
+        }
+
+        if ($controller === null) {
+            $controller = get_class($this);
+        }
+
+        if ($method === null) {
+            $bt = debug_backtrace();
+            $method = $bt[1]['function'];
+        }
+
+        Hook::exec('actionBeforeAjaxDie', array('controller' => $controller, 'method' => $method, 'value' => $value));
+        Hook::exec('actionBeforeAjaxDie' . $controller . $method, array('value' => $value));
+
+        die($value);
     }
 }

@@ -29,7 +29,9 @@ class Locations extends ObjectModel
         'multilang' => false,
         'fields' => array(
             'id_product' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
-            'price' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+            'week_available' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+            'id_service' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+            'id_equipement' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
         ),
     );
@@ -91,12 +93,14 @@ class Locations extends ObjectModel
      *
      * @return Locations Object
      */
-    public static function createLocations($id_product, $price) {
+    public static function createLocations($id_product, $week_available,$id_service,$id_equipement) {
 
         $now = new DateTime();
         $location = new Locations();
         $location->id_product = $id_product;
-        $location->price = $price;
+        $location->week_available = $week_available;
+        $location->id_service = $id_service;
+        $location->id_equipement = $id_equipement;
         $location->date_add = $now->format('Y-m-d H:i:s');
         $location->save();
         return $location->id_location;
@@ -113,11 +117,13 @@ class Locations extends ObjectModel
      *
      * @return Locations Object
      */
-    public static function updateLocations($id_location,$id_product, $price ) {
+    public static function updateLocations($id_location,$id_product,  $week_available,$id_service,$id_equipement ) {
 
         $location = new Locations($id_location);
         $location->id_product = $id_product;
-        $location->price = $price;
+        $location->week_available = $week_available;
+        $location->id_service = $id_service;
+        $location->id_equipement = $id_equipement;
         $location->update();
         return $location;
     }

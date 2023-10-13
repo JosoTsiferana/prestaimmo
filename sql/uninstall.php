@@ -15,7 +15,8 @@ $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'prestaimmo_product_equipment`;';
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'prestaimmo_service`;';
 
 $sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'prestaimmo_location`;';
-$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'prestaimmo_product_service_equipement`;';
+
+$sql[] = 'DROP TABLE IF EXISTS `'._DB_PREFIX_.'prestaimmo_resa`;';
 
 $sql[] = 'SET foreign_key_checks = 1;';
 

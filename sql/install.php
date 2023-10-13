@@ -37,6 +37,7 @@ $sql[] =
         `id_service` int(10) NOT NULL AUTO_INCREMENT,
         `title` varchar(250) NOT NULL,
         `price` varchar(250) NOT NULL,
+        `changeable` TINYINT(1) DEFAULT 0,
         `date_add` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (`id_service`)
     ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
@@ -49,22 +50,32 @@ $sql[] =
 'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'prestaimmo_location` (
     `id_location` int(10) NOT NULL AUTO_INCREMENT,
     `id_product` varchar(250) NOT NULL,
-    `price` varchar(250) NULL,
+    `week_available` varchar(250) NOT NULL,
+    `id_service` varchar(250) NOT NULL,
+    `id_equipement` varchar(250) NOT NULL,
     `date_add` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id_location`)
 ) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
 
-$sql[] =
-'CREATE TABLE IF NOT EXISTS `'._DB_PREFIX_.'prestaimmo_product_service_equipement` (
-    `id_product` int(10) UNSIGNED NOT NULL,
-    `id_service` int(10) UNSIGNED NOT NULL,
-    `id_equipement` tinyint UNSIGNED NOT NULL DEFAULT 0
-) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8';
+/**
+ * table fro Resa
+ */
 
-
+ $sql[] =
+'CREATE TABLE `ps_prestaimmo_resa` (
+    `id_resa` int(10) NOT NULL,
+    `id_product` varchar(250) NOT NULL,
+    `price` varchar(250) NOT NULL,
+    `week_reserved` varchar(250) NOT NULL,
+    `id_user` int(10) NOT NULL,
+    `date_add` datetime NOT NULL DEFAULT current_timestamp()
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8';
 
 foreach ($sql as $s) {
     if (!Db::getInstance()->execute($s)) {
         return false;
     }
 }
+
+
+

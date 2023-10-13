@@ -44,7 +44,7 @@ class PrestaImmo extends Module
 
     }
 
-    public function install()
+   /* public function install()
     {
         // Create Manualinvoicemanagement Table
         
@@ -53,17 +53,27 @@ class PrestaImmo extends Module
         return parent::install()
             && $this->installModuleTab()
             && $this->registerHook('displayAdminProductsExtra')
-            && $this->registerHook('ActionAdminUpdate')
-            && $this->registerHook('hookActionProductSave')
-            && $this->registerHook('hookDisplayBackOfficeHeader');
+            && $this->registerHook('actionAdminUpdate')
+            && $this->registerHook('actionProductSave')
+            && $this->registerHook('displayBackOfficeHeader');
 
-    }
+    }*/
 
-      public function installOverrides(){
-        if(_PS_VERSION_ >= 1.7){
-            parent::installOverrides();
+    public function install()
+    {
+        include(dirname(__FILE__).'/sql/install.php');
+        if (!parent::install() ||
+            !$this->installModuleTab() ||
+            !$this->registerHook('displayAdminProductsExtra')||
+            !$this->registerHook('displayBackOfficeHeader')||
+            !$this->registerHook('actionProductSave')
+        ) {
+            return false;
         }
+
+        return true;
     }
+
 
     public function uninstall()
     {
@@ -71,7 +81,10 @@ class PrestaImmo extends Module
          include(dirname(__FILE__).'/sql/uninstall.php');
 
         return parent::uninstall()
-            && $this->uninstallModuleTab();
+            && $this->uninstallModuleTab()
+            && $this->unregisterHook('displayAdminProductsExtra')
+            && $this->unregisterHook('displayBackOfficeHeader')
+            && $this->unregisterHook('actionProductSave');
     }
 
     private function installModuleTab()
@@ -415,7 +428,7 @@ class PrestaImmo extends Module
                 $datefin = date('Y-m-d',mktime(0, 0, 0, date('m'), $jour_depart + (($i+1)*7), date('Y')));
                 $datedebfr = $this->date_fr_en_clair(date('d/m/Y',mktime(0, 0, 0, date('m'), $jour_depart + ($i*7), date('Y'))));
                 $datefinfr = $this->date_fr_en_clair(date('d/m/Y',mktime(0, 0, 0, date('m'), $jour_depart + (($i+1)*7), date('Y'))));
-                $dateresa = $type.';'.$datedeb.';'.$datefin;
+                $dateresa = $datedeb.';'.$datefin;
                 $nomchamptarif = $type.$datedeb.$datefin;
                
                 $tarif_spe = (isset($tarifs_specifiques[$dateresa])) ? $tarifs_specifiques[$dateresa] : '';               
@@ -450,16 +463,20 @@ class PrestaImmo extends Module
         return $date_en_clair;
     }
     
+
+    public function hookDisplayBackOfficeHeader(){
+        $this->context->controller->addJs($this->_path .'/views/js/custom.js');
+        $this->context->controller->addCss($this->_path . '/views/css/prestaimmo_admin.css');
+    }
+
+
     public function hookActionProductSave($params)
     {
         // Code à exécuter lorsque le produit est sauvegardé.
         // Vous pouvez accéder aux données du produit avec $params.
         $productId = (int)$params['id_product'];
-        var_dump($productId);
+        var_dump($params);
+        exit();
     }
-    
-    public function hookDisplayBackOfficeHeader(){
-        $this->addCSS(__PS_BASE_URI__ . 'modules/prestaimmo/views/css/prestaimmo_admin.css');
-        $this->addJS(__PS_BASE_URI__ . 'modules/prestaimmo/views/js/custom.js');
-    }
+   
 }
